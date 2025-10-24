@@ -9,6 +9,7 @@ import {
 import { ChatCompletionUserMessageParam } from "groq-sdk/resources/chat.mjs";
 import { useRouter } from "next/navigation";
 import MessageInput from "./MessageInput";
+import { useState } from "react";
 
 type Props = {
   userId: string;
@@ -16,6 +17,7 @@ type Props = {
 
 export default function NewChatMessageInput({ userId }: Props) {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const submit = async (userMessageContent: string) => {
     try {
@@ -24,10 +26,14 @@ export default function NewChatMessageInput({ userId }: Props) {
         role: "user",
       };
 
-      const name = await createChatName(userMessageContent);
-      const chat = await createNewChat(userId, name);
+      setIsLoading(true);
 
-      const chatCompletion = await getGroqChatCompletion([userMessage]);
+      const [name, chatCompletion] = await Promise.all([
+        createChatName(userMessageContent),
+        getGroqChatCompletion([userMessage]),
+      ]);
+
+      const chat = await createNewChat(userId, name);
 
       await saveUserAndAssistantMessages(
         userMessage,
@@ -41,5 +47,11 @@ export default function NewChatMessageInput({ userId }: Props) {
     }
   };
 
-  return <MessageInput onSubmit={submit} />;
+  return (
+    <MessageInput
+      onSubmit={submit}
+      isLoading={isLoading}
+      clearTextOnSubmit={false}
+    />
+  );
 }

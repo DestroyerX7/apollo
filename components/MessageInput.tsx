@@ -4,17 +4,22 @@ import { useRef, useState } from "react";
 import { Button } from "./ui/button";
 import { IoIosSend } from "react-icons/io";
 import TextareaAutosize from "react-textarea-autosize";
+import { LuLoaderCircle } from "react-icons/lu";
 
 type Props = {
   onSubmit: (userMessageContent: string) => void;
   placeholder?: string;
   disabled?: boolean;
+  isLoading?: boolean;
+  clearTextOnSubmit?: boolean;
 };
 
 export default function MessageInput({
   onSubmit,
   placeholder,
   disabled,
+  isLoading = false,
+  clearTextOnSubmit = true,
 }: Props) {
   const [userMessageContent, setUserMessageContent] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -27,7 +32,10 @@ export default function MessageInput({
     }
 
     onSubmit(userMessageContent.trim());
-    setUserMessageContent("");
+
+    if (clearTextOnSubmit) {
+      setUserMessageContent("");
+    }
   };
 
   const handleDivClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -71,9 +79,13 @@ export default function MessageInput({
           <Button
             className="cursor-pointer rounded-full"
             size="icon"
-            disabled={disabled || !userMessageContent.trim()}
+            disabled={disabled || isLoading || !userMessageContent.trim()}
           >
-            <IoIosSend />
+            {isLoading ? (
+              <LuLoaderCircle className="animate-spin" />
+            ) : (
+              <IoIosSend />
+            )}
           </Button>
         </div>
       </div>

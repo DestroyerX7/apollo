@@ -1,6 +1,5 @@
 import { Chat } from "@/generated/prisma";
 import Link from "next/link";
-import React from "react";
 
 type Props = {
   chats: Chat[];

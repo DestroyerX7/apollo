@@ -1,14 +1,16 @@
 "use client";
 
 import { Chat } from "@/generated/prisma";
-import { getChats, updateName } from "@/lib/actions";
+import { getChats, updateImage, updateName, uploadImage } from "@/lib/actions";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import {
   IoAddCircle,
   IoLogOutOutline,
   IoSettingsOutline,
+  IoHelpCircleOutline,
+  IoEllipsisHorizontalSharp,
 } from "react-icons/io5";
 import ChatList from "./ChatList";
 import { User } from "better-auth";
@@ -23,7 +25,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { IoIosArrowUp, IoMdHelpCircleOutline } from "react-icons/io";
 import LogOutButton from "./LogOutButton";
 import {
   Dialog,
@@ -38,6 +39,7 @@ import {
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
+import { useRouter } from "next/navigation";
 // import z from "zod";
 // import { useForm } from "react-hook-form";
 // import { zodResolver } from "@hookform/resolvers/zod";
@@ -53,7 +55,8 @@ type Props = {
 
 export default function Sidebar({ user, selectedChatId }: Props) {
   const [chats, setChats] = useState<Chat[]>([]);
-  const [profileData, setProfileData] = useState({ name: user.name });
+  // const [profileData, setProfileData] = useState({ name: user.name });
+  const router = useRouter();
 
   useEffect(() => {
     const loadChats = async () => {
@@ -79,13 +82,41 @@ export default function Sidebar({ user, selectedChatId }: Props) {
   //   console.log(values);
   // };
 
-  const editProfile = async () => {
+  // const editProfile = async () => {
+  //   try {
+  //     if (profileData.name.trim().length < 1) {
+  //       return;
+  //     }
+
+  //     await updateName(profileData.name.trim(), user.id);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  const handleSubmit = async (e: FormEvent) => {
     try {
-      if (profileData.name.trim().length < 1) {
-        return;
+      e.preventDefault();
+
+      const target = e.target as typeof e.target & {
+        file: { files: FileList };
+        name: { value: string };
+      };
+
+      const name = target.name.value;
+
+      if (name.trim() !== user.name) {
+        await updateName(name.trim(), user.id);
       }
 
-      await updateName(profileData.name.trim(), user.id);
+      const file = target.file.files[0];
+
+      if (file) {
+        const url = await uploadImage(file, user.image);
+        await updateImage(url, user.id);
+      }
+
+      router.refresh();
     } catch (error) {
       console.log(error);
     }
@@ -129,10 +160,12 @@ export default function Sidebar({ user, selectedChatId }: Props) {
                   </AvatarFallback>
                 </Avatar>
 
-                <p className="text-sm">{user.name || "User"}</p>
+                <p className="text-sm text-secondary-foreground">
+                  {user.name || "User"}
+                </p>
               </div>
 
-              <IoIosArrowUp />
+              <IoEllipsisHorizontalSharp className="text-secondary-foreground" />
             </div>
           </DropdownMenuTrigger>
 
@@ -144,7 +177,7 @@ export default function Sidebar({ user, selectedChatId }: Props) {
             <DropdownMenuGroup>
               <Link href="/learn-more">
                 <DropdownMenuItem className="cursor-pointer">
-                  <IoMdHelpCircleOutline />
+                  <IoHelpCircleOutline />
                   Learn More
                 </DropdownMenuItem>
               </Link>
@@ -179,30 +212,41 @@ export default function Sidebar({ user, selectedChatId }: Props) {
             </DialogDescription>
           </DialogHeader>
 
-          <Label htmlFor="name">Name</Label>
-          <Input
-            id="name"
-            type="text"
-            placeholder="Name"
-            name="name"
-            value={profileData.name}
-            onChange={(e) => setProfileData({ name: e.target.value })}
-          />
+          <form onSubmit={handleSubmit} encType="multipart/form-data">
+            <Label htmlFor="file" className="mb-2">
+              Image
+            </Label>
+            <Input type="file" name="file" id="file" className="mb-4" />
 
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button className="cursor-pointer" variant="outline">
-                Cancel
+            <Label htmlFor="name" className="mb-2">
+              Name
+            </Label>
+            <Input
+              id="name"
+              type="text"
+              placeholder="Name"
+              name="name"
+              defaultValue={user.name}
+              className="mb-4"
+              // value={profileData.name}
+              // onChange={(e) => setProfileData({ name: e.target.value })}
+            />
+
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button className="cursor-pointer" variant="outline">
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button
+                className="cursor-pointer"
+                type="submit"
+                // onClick={editProfile}
+              >
+                Save changes
               </Button>
-            </DialogClose>
-            <Button
-              className="cursor-pointer"
-              type="submit"
-              onClick={editProfile}
-            >
-              Save changes
-            </Button>
-          </DialogFooter>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
     </div>

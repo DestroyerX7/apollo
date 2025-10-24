@@ -132,7 +132,7 @@ export default function LoginCard() {
                   <FormControl>
                     <ShowPasswordInput
                       placeholder="Password"
-                      autoComplete="new-password"
+                      autoComplete="current-password"
                       {...field}
                     />
                   </FormControl>

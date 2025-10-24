@@ -1,4 +1,3 @@
-import React from "react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import LogOutButton from "./LogOutButton";
@@ -10,7 +9,7 @@ type Props = {
 
 export default function Header({ isLoggedIn }: Props) {
   return (
-    <header className="flex justify-between items-center p-4 border-b bg-primary-foreground">
+    <header className="flex justify-between items-center p-4 border-b bg-primary-foreground z-50">
       <Link href="/" className="flex items-center gap-2">
         <Image src="/apollo.png" width={32} height={32} alt="Apollo" />
         <h1 className="text-2xl font-bold">Apollo</h1>

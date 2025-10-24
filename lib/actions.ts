@@ -7,6 +7,7 @@ import {
   ChatCompletionUserMessageParam,
 } from "groq-sdk/resources/chat.mjs";
 import { prisma } from "./auth";
+import { v2 as cloudinary } from "cloudinary";
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -19,6 +20,8 @@ This is a chatbot website called Apollo created by Blake Ojera. The tools used t
 `;
 
 const maxMessagesLength = 10;
+const maxCompletionTokens = 2500;
+const reasoningEffort = "low";
 
 export const getGroqChatCompletion = async (
   messages: ChatCompletionMessageParam[]
@@ -32,6 +35,8 @@ export const getGroqChatCompletion = async (
       ...messages.slice(-maxMessagesLength),
     ],
     model: "openai/gpt-oss-20b",
+    max_completion_tokens: maxCompletionTokens,
+    reasoning_effort: reasoningEffort,
   });
 };
 
@@ -47,6 +52,8 @@ export const getGroqChatStream = async (
       ...messages.slice(-maxMessagesLength),
     ],
     model: "openai/gpt-oss-20b",
+    max_completion_tokens: maxCompletionTokens,
+    reasoning_effort: reasoningEffort,
     stream: true,
   });
 };
@@ -82,6 +89,8 @@ ${userMessageContent}
       },
     ],
     model: "openai/gpt-oss-20b",
+    max_completion_tokens: maxCompletionTokens,
+    reasoning_effort: reasoningEffort,
   });
 
   return response.choices[0].message.content || "New chat";
@@ -140,4 +149,94 @@ export const updateName = async (name: string, userId: string) => {
       name,
     },
   });
+};
+
+export const updateImage = async (imageUrl: string, userId: string) => {
+  await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      image: imageUrl,
+    },
+  });
+};
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+type CloudinaryUploadResponse = {
+  public_id: string;
+  version: number;
+  signature: string;
+  width: number;
+  height: number;
+  format: string;
+  resource_type: string;
+  created_at: string;
+  tags: string[];
+  bytes: number;
+  type: string;
+  etag: string;
+  placeholder: boolean;
+  url: string;
+  secure_url: string;
+};
+
+export const uploadImage = async (
+  file: File,
+  previousImageUrl: string | null | undefined
+): Promise<string> => {
+  if (!file) throw new Error("No file provided");
+
+  // Convert File to Buffer
+  const buffer = Buffer.from(await file.arrayBuffer());
+
+  // Helper function to upload buffer to Cloudinary
+  const streamUpload = (buffer: Buffer): Promise<CloudinaryUploadResponse> =>
+    new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        {
+          folder: "apollo-uploads",
+          transformation: [
+            { width: 2048, height: 2048, crop: "limit" }, // limits max size
+          ],
+        },
+        (error, result) => {
+          if (result) {
+            resolve(result);
+          } else {
+            reject(error);
+          }
+        }
+      );
+      stream.end(buffer);
+    });
+
+  const result = await streamUpload(buffer);
+
+  if (previousImageUrl) {
+    deleteImageByUrl(previousImageUrl);
+  }
+
+  return result.secure_url;
+};
+
+const deleteImageByUrl = async (url: string) => {
+  const publicId = getPublicIdFromUrl(url);
+
+  await cloudinary.uploader.destroy(publicId, (error, result) => {
+    if (error) {
+      throw error;
+    }
+  });
+};
+
+const getPublicIdFromUrl = (url: string) => {
+  const publicIdWithExt = url.substring(url.indexOf("apollo-uploads/"));
+  const publicId = publicIdWithExt.replace(/\.[^/.]+$/, ""); // remove extension
+  return publicId;
 };
