@@ -1,94 +1,73 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { Button } from "./ui/button";
 import { IoIosSend } from "react-icons/io";
-import TextareaAutosize from "react-textarea-autosize";
-import { LuLoaderCircle } from "react-icons/lu";
+import { Button } from "./ui/button";
+import { cn } from "@/lib/utils";
+import { Spinner } from "./ui/spinner";
+import TextareaAutosize, {
+  TextareaAutosizeProps,
+} from "react-textarea-autosize";
+import { useRef } from "react";
 
 type Props = {
-  onSubmit: (userMessageContent: string) => void;
-  placeholder?: string;
-  disabled?: boolean;
-  isLoading?: boolean;
-  clearTextOnSubmit?: boolean;
-};
+  loading?: boolean;
+  disableButton?: boolean;
+  disableTextArea?: boolean;
+} & TextareaAutosizeProps;
 
-export default function MessageInput({
-  onSubmit,
-  placeholder,
+export default function Yo({
+  loading = false,
+  disableButton = false,
+  disableTextArea = false,
+  className,
   disabled,
-  isLoading = false,
-  clearTextOnSubmit = true,
+  ...props
 }: Props) {
-  const [userMessageContent, setUserMessageContent] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!userMessageContent.trim()) {
-      return;
+  const handleContainerClick = () => {
+    if (textareaRef.current && !disabled && !disableTextArea) {
+      textareaRef.current.focus();
     }
-
-    onSubmit(userMessageContent.trim());
-
-    if (clearTextOnSubmit) {
-      setUserMessageContent("");
-    }
-  };
-
-  const handleDivClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    const target = e.target as HTMLElement;
-    // Ignore clicks on buttons, SVGs, inputs, etc.
-    if (["BUTTON", "SVG", "PATH", "TEXTAREA", "INPUT"].includes(target.tagName))
-      return;
-
-    // Focus the textarea
-    textareaRef.current?.focus();
   };
 
   return (
-    <form
-      className="border rounded-2xl shadow cursor-text bg-primary-foreground"
-      onSubmit={handleSubmit}
+    <div
+      className={cn(
+        className,
+        "border shadow rounded-2xl bg-primary-foreground",
+        disabled || disableTextArea ? "cursor-default" : " cursor-text"
+      )}
+      onClick={handleContainerClick}
     >
-      <div onClick={handleDivClick}>
-        <TextareaAutosize
-          className="resize-none w-full px-4 pt-4 focus:outline-none"
-          rows={1}
-          minRows={1}
-          maxRows={10}
-          value={userMessageContent}
-          placeholder={placeholder || "Message Apollo"}
-          name="user-message-content"
-          onChange={(e) => setUserMessageContent(e.target.value)}
-          ref={textareaRef}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              handleSubmit(e);
-            }
-          }}
-        />
+      <TextareaAutosize
+        className="resize-none w-full p-4 focus:outline-none placeholder:text-muted-foreground"
+        disabled={disabled || disableTextArea}
+        ref={textareaRef}
+        {...props}
+      />
 
-        <div className="flex items-center justify-between p-3">
-          <Button className="rounded-full" variant="outline">
-            apollo-v1
-          </Button>
+      <div className="flex justify-between px-4 pb-4">
+        <Button
+          className="rounded-full"
+          variant="outline"
+          type="button"
+          onClick={(e) => e.stopPropagation()}
+        >
+          apollo-v1
+        </Button>
 
-          <Button
-            className="cursor-pointer rounded-full"
-            size="icon"
-            disabled={disabled || isLoading || !userMessageContent.trim()}
-          >
-            {isLoading ? (
-              <LuLoaderCircle className="animate-spin" />
-            ) : (
-              <IoIosSend />
-            )}
-          </Button>
-        </div>
+        <Button
+          className="rounded-full cursor-pointer"
+          size="icon"
+          variant="default"
+          disabled={disabled || disableButton}
+          type="submit"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {loading ? <Spinner /> : <IoIosSend />}
+        </Button>
       </div>
-    </form>
+    </div>
   );
 }

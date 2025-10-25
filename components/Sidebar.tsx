@@ -123,9 +123,9 @@ export default function Sidebar({ user, selectedChatId }: Props) {
   };
 
   return (
-    <div className="sticky top-0 h-screen w-64 border-r border-sidebar-border bg-sidebar p-4 overflow-y-auto flex flex-col">
-      <div className="sticky top-0 bg-sidebar space-y-4">
-        <Link href="/" className="flex items-center gap-2">
+    <div className="sticky top-0 h-screen w-64 border-r border-sidebar-border bg-sidebar overflow-y-auto flex flex-col">
+      <div className="sticky top-0 bg-sidebar p-2 space-y-4">
+        <Link href="/" className="flex items-center gap-2 p-2">
           <Image src="/apollo.png" alt="Apollo" width={32} height={32} />
           <h1 className="font-bold text-2xl">Apollo</h1>
         </Link>
@@ -139,116 +139,116 @@ export default function Sidebar({ user, selectedChatId }: Props) {
         </Link>
       </div>
 
-      <h1 className="p-2 text-secondary-foreground text-sm">Chats</h1>
+      <h1 className="px-4 py-2 text-secondary-foreground text-sm">Chats</h1>
 
-      <div className="flex-1">
+      <div className="flex-1 px-2 mb-8">
         <ChatList chats={chats} selectedChatId={selectedChatId} />
       </div>
 
-      <Dialog>
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            className="hover:bg-gray-200 rounded p-2 cursor-pointer focus:outline-none"
-            asChild
-          >
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <Avatar>
-                  <AvatarImage src={user.image || ""} alt="@shadcn" />
-                  <AvatarFallback>
-                    <FaUserCircle className="w-full h-full" />
-                  </AvatarFallback>
-                </Avatar>
+      <div className="sticky bottom-0 bg-sidebar p-2 border-t border-sidebar-border">
+        <Dialog>
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              className="hover:bg-gray-200 rounded p-2 cursor-pointer focus:outline-none"
+              asChild
+            >
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <Avatar>
+                    <AvatarImage src={user.image || ""} alt="@shadcn" />
+                    <AvatarFallback>
+                      <FaUserCircle className="w-full h-full" />
+                    </AvatarFallback>
+                  </Avatar>
 
-                <p className="text-sm text-secondary-foreground">
-                  {user.name || "User"}
-                </p>
+                  <p className="text-sm">{user.name || "User"}</p>
+                </div>
+
+                <IoEllipsisHorizontalSharp />
               </div>
+            </DropdownMenuTrigger>
 
-              <IoEllipsisHorizontalSharp className="text-secondary-foreground" />
-            </div>
-          </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
 
-          <DropdownMenuContent className="w-56">
-            <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
+              <DropdownMenuSeparator />
 
-            <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <Link href="/learn-more">
+                  <DropdownMenuItem className="cursor-pointer">
+                    <IoHelpCircleOutline />
+                    Learn More
+                  </DropdownMenuItem>
+                </Link>
 
-            <DropdownMenuGroup>
-              <Link href="/learn-more">
-                <DropdownMenuItem className="cursor-pointer">
-                  <IoHelpCircleOutline />
-                  Learn More
-                </DropdownMenuItem>
-              </Link>
+                <DialogTrigger asChild>
+                  <DropdownMenuItem className="cursor-pointer">
+                    <IoSettingsOutline />
+                    Settings
+                  </DropdownMenuItem>
+                </DialogTrigger>
+              </DropdownMenuGroup>
 
-              <DialogTrigger asChild>
-                <DropdownMenuItem className="cursor-pointer">
-                  <IoSettingsOutline />
-                  Settings
-                </DropdownMenuItem>
-              </DialogTrigger>
-            </DropdownMenuGroup>
+              <DropdownMenuSeparator />
 
-            <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <LogOutButton className="w-full">
+                  <DropdownMenuItem className="cursor-pointer">
+                    <IoLogOutOutline />
+                    Log out
+                  </DropdownMenuItem>
+                </LogOutButton>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-            <DropdownMenuGroup>
-              <LogOutButton className="w-full">
-                <DropdownMenuItem className="cursor-pointer">
-                  <IoLogOutOutline />
-                  Log out
-                </DropdownMenuItem>
-              </LogOutButton>
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit profile</DialogTitle>
+              <DialogDescription>
+                Make changes to your profile here. Click save when you&apos;re
+                done.
+              </DialogDescription>
+            </DialogHeader>
 
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit profile</DialogTitle>
-            <DialogDescription>
-              Make changes to your profile here. Click save when you&apos;re
-              done.
-            </DialogDescription>
-          </DialogHeader>
+            <form onSubmit={handleSubmit} encType="multipart/form-data">
+              <Label htmlFor="file" className="mb-2">
+                Image
+              </Label>
+              <Input type="file" name="file" id="file" className="mb-4" />
 
-          <form onSubmit={handleSubmit} encType="multipart/form-data">
-            <Label htmlFor="file" className="mb-2">
-              Image
-            </Label>
-            <Input type="file" name="file" id="file" className="mb-4" />
+              <Label htmlFor="name" className="mb-2">
+                Name
+              </Label>
+              <Input
+                id="name"
+                type="text"
+                placeholder="Name"
+                name="name"
+                defaultValue={user.name}
+                className="mb-4"
+                // value={profileData.name}
+                // onChange={(e) => setProfileData({ name: e.target.value })}
+              />
 
-            <Label htmlFor="name" className="mb-2">
-              Name
-            </Label>
-            <Input
-              id="name"
-              type="text"
-              placeholder="Name"
-              name="name"
-              defaultValue={user.name}
-              className="mb-4"
-              // value={profileData.name}
-              // onChange={(e) => setProfileData({ name: e.target.value })}
-            />
-
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button className="cursor-pointer" variant="outline">
-                  Cancel
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button className="cursor-pointer" variant="outline">
+                    Cancel
+                  </Button>
+                </DialogClose>
+                <Button
+                  className="cursor-pointer"
+                  type="submit"
+                  // onClick={editProfile}
+                >
+                  Save changes
                 </Button>
-              </DialogClose>
-              <Button
-                className="cursor-pointer"
-                type="submit"
-                // onClick={editProfile}
-              >
-                Save changes
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </div>
     </div>
   );
 }

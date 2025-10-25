@@ -7,10 +7,10 @@ export default function LogOutButton({
   children,
   className,
   ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
+}: React.ComponentProps<"div">) {
   const router = useRouter();
 
-  const signOut = async () => {
+  const logOut = async () => {
     try {
       await authClient.signOut({
         fetchOptions: {
@@ -25,7 +25,7 @@ export default function LogOutButton({
   };
 
   return (
-    <div className={className} onClick={signOut} {...props}>
+    <div className={className} onClick={logOut} {...props}>
       {children}
     </div>
   );

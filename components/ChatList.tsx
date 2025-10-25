@@ -5,6 +5,7 @@ type Props = {
   chats: Chat[];
   selectedChatId?: string;
 };
+
 export default function ChatList({ chats, selectedChatId }: Props) {
   return (
     <div className="flex flex-col">

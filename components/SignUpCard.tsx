@@ -28,7 +28,7 @@ const signUpFormSchema = z.object({
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters" })
-    .max(256, { message: "Password cannot exceed 256 characters" }),
+    .max(128, { message: "Password cannot exceed 128 characters" }),
   confirmPassword: z.string(),
 });
 

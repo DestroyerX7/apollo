@@ -9,27 +9,36 @@ import {
 import { ChatCompletionUserMessageParam } from "groq-sdk/resources/chat.mjs";
 import { useRouter } from "next/navigation";
 import MessageInput from "./MessageInput";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 
 type Props = {
   userId: string;
 };
 
 export default function NewChatMessageInput({ userId }: Props) {
+  const [userMessageContent, setUserMessageContent] = useState("");
+  const [creatingNewChat, setCreatingNewChat] = useState(false);
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
 
-  const submit = async (userMessageContent: string) => {
+  const submit = async (e: FormEvent) => {
     try {
+      e.preventDefault();
+
+      const trimmedUserMessageContent = userMessageContent.trim();
+
+      if (creatingNewChat || trimmedUserMessageContent.length < 1) {
+        return;
+      }
+
       const userMessage: ChatCompletionUserMessageParam = {
-        content: userMessageContent,
+        content: trimmedUserMessageContent,
         role: "user",
       };
 
-      setIsLoading(true);
+      setCreatingNewChat(true);
 
       const [name, chatCompletion] = await Promise.all([
-        createChatName(userMessageContent),
+        createChatName(trimmedUserMessageContent),
         getGroqChatCompletion([userMessage]),
       ]);
 
@@ -48,10 +57,30 @@ export default function NewChatMessageInput({ userId }: Props) {
   };
 
   return (
-    <MessageInput
-      onSubmit={submit}
-      isLoading={isLoading}
-      clearTextOnSubmit={false}
-    />
+    <form onSubmit={submit}>
+      <MessageInput
+        placeholder="Message Apollo"
+        name="user-message-content"
+        rows={1}
+        minRows={1}
+        maxRows={10}
+        disableButton={userMessageContent.trim().length < 1}
+        disabled={creatingNewChat}
+        loading={creatingNewChat}
+        value={userMessageContent}
+        onChange={(e) => {
+          if (creatingNewChat) {
+            return;
+          }
+
+          setUserMessageContent(e.target.value);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            submit(e);
+          }
+        }}
+      />
+    </form>
   );
 }

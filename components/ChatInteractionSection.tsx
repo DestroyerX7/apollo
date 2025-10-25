@@ -12,7 +12,7 @@ import {
   ChatCompletionMessageParam,
   ChatCompletionUserMessageParam,
 } from "groq-sdk/resources/chat.mjs";
-import React, { useEffect, useRef, useState } from "react";
+import React, { FormEvent, useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
@@ -22,7 +22,10 @@ import { Separator } from "./ui/separator";
 import { Stream } from "groq-sdk/lib/streaming.mjs";
 import MessageInput from "./MessageInput";
 import CopyButton from "./CopyButton";
-import { LuLoaderCircle } from "react-icons/lu";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import "katex/dist/katex.min.css";
+import { Spinner } from "./ui/spinner";
 // import { User } from "better-auth";
 // import MessageList from "./MessageList";
 
@@ -32,6 +35,7 @@ type Props = {
 };
 
 export default function ChatInteractionSection({ chatId }: Props) {
+  const [userMessageContent, setUserMessageContent] = useState("");
   const [messages, setMessages] = useState<ChatCompletionMessageParam[]>([]);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -64,11 +68,21 @@ export default function ChatInteractionSection({ chatId }: Props) {
     }
   }, [messages]);
 
-  const submit = async (userMessageContent: string) => {
+  const submit = async (e: FormEvent) => {
     try {
+      e.preventDefault();
+
+      const trimmedUserMessageContent = userMessageContent.trim();
+
+      if (isLoading || trimmedUserMessageContent.length < 1) {
+        return;
+      }
+
+      setUserMessageContent("");
+
       const userMessage: ChatCompletionUserMessageParam = {
         role: "user",
-        content: userMessageContent,
+        content: trimmedUserMessageContent,
         // Maybe do this later
         // name: user.name.length > 0 ? user.name.length : undefined,
       };
@@ -208,8 +222,19 @@ export default function ChatInteractionSection({ chatId }: Props) {
             return (
               <ReactMarkdown
                 key={crypto.randomUUID()}
-                remarkPlugins={[remarkGfm]}
-                rehypePlugins={[rehypeRaw, rehypeHighlight]}
+                remarkPlugins={[remarkGfm, remarkMath]}
+                rehypePlugins={[
+                  rehypeRaw,
+                  rehypeHighlight,
+                  [
+                    rehypeKatex,
+                    {
+                      macros: {
+                        "|": "\\vert", // Does not fix math "|" in tables
+                      },
+                    },
+                  ],
+                ]}
                 components={{
                   code: ({ children, className, ...props }) => {
                     const blockCode =
@@ -248,20 +273,52 @@ export default function ChatInteractionSection({ chatId }: Props) {
                   hr: () => <Separator />,
                 }}
               >
-                {message.content?.toString()}
+                {message.content
+                  ?.toString()
+                  .replace(/\u2011/g, "-")
+                  .replace(/\$/g, "&dollar;")
+                  .replace(/\\\[/g, "$$$$")
+                  .replace(/\\\]/g, "$$$$")
+                  .replace(/\\\(/g, "$$")
+                  .replace(/\\\)/g, "$$")}
               </ReactMarkdown>
             );
           })}
 
-          {isLoading && <LuLoaderCircle className="animate-spin" />}
+          {isLoading && <Spinner />}
         </div>
 
         <div ref={bottomRef} />
       </div>
 
       <div className="sticky bottom-0 bg-primary-foreground rounded-t-2xl">
-        <MessageInput onSubmit={submit} />
-        <p className="text-center text-sm text-neutral-400 py-2">
+        <form onSubmit={submit}>
+          <MessageInput
+            placeholder="Message Apollo"
+            name="user-message-content"
+            rows={1}
+            minRows={1}
+            maxRows={10}
+            disableButton={userMessageContent.trim().length < 1}
+            disabled={isLoading}
+            loading={isLoading}
+            value={userMessageContent}
+            onChange={(e) => {
+              if (isLoading) {
+                return;
+              }
+
+              setUserMessageContent(e.target.value);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                submit(e);
+              }
+            }}
+          />
+        </form>
+
+        <p className="text-center text-sm text-muted-foreground py-2">
           Apollo can make mistakes. Check important info.
         </p>
       </div>
