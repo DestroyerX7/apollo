@@ -240,3 +240,7 @@ const getPublicIdFromUrl = (url: string) => {
   const publicId = publicIdWithExt.replace(/\.[^/.]+$/, ""); // remove extension
   return publicId;
 };
+
+export const deleteChat = async (chatId: string) => {
+  await prisma.chat.delete({ where: { id: chatId } });
+};

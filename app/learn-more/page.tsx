@@ -40,11 +40,13 @@ export default async function LearnMore() {
         <Header isLoggedIn={data !== null} />
       </div>
 
-      <div className="mx-32 my-16 space-y-32">
+      <div className="md:mx-32 my-16 space-y-32 p-4">
         <div className="text-center space-y-8">
-          <h1 className="text-8xl font-bold font-serif">Welcome to Apollo</h1>
+          <h1 className="text-6xl md:text-8xl font-bold font-serif">
+            Welcome to Apollo
+          </h1>
 
-          <p className="text-4xl">
+          <p className="text-2xl md:text-4xl">
             Apollo is an AI safety and research company. We build reliable,
             interpretable, and steerable AI systems.
           </p>
@@ -55,7 +57,7 @@ export default async function LearnMore() {
             Here are some of its amazing capabilites
           </p>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card>
               <CardHeader>
                 <CardTitle className="flex justify-between">
@@ -99,8 +101,8 @@ export default async function LearnMore() {
 
         <Separator />
 
-        <div className="flex rounded-2xl overflow-hidden items-stretch bg-secondary">
-          <div className="relative w-full">
+        <div className="flex flex-col lg:flex-row rounded-2xl overflow-hidden items-stretch bg-secondary">
+          <div className="relative w-full h-64 lg:h-auto">
             <Image
               src="/SeniorPicture.jpg"
               alt="Blake Picture"
@@ -113,23 +115,23 @@ export default async function LearnMore() {
             />
           </div>
 
-          <div className="p-16 space-y-4">
+          <div className="p-8 lg:p-16 space-y-4">
             <h1 className="text-2xl font-bold">
-              My name is Blake Ojera and i&apos;m the Senior Developer behind
-              Apollo. It has been a pleasure to be apart of this ground breaking
-              work that we have been able to do.
+              My name is Blake Ojera, and I'm the Senior Developer behind
+              Apollo. Working on this project has been an amazing experience,
+              and I'm proud of what our team has accomplished.
             </h1>
 
             <p>
               I&apos;m a computer science student at CU Boulder with a strong
               interest in technology and problem-solving. I enjoy building and
               experimenting with software projects — right now, I&apos;m working
-              on a 2D game in Unity and a web app that integrates the Spotify
-              Web Playback SDK. Outside of programming, I like staying active
-              and challenging myself at the gym; one of my current fitness goals
-              is to increase my bench press to 225 pounds. I also enjoy
-              exploring new FPS games, and learning about how emerging
-              technologies like AI are shaping the world around us.
+              on a multiplayer game in Unity, and a website called Spotify
+              Roulette that integrates the Spotify API. Outside of programming,
+              I like staying active and challenging myself at the gym; one of my
+              current fitness goals is to increase my bench press to 225 pounds.
+              I also enjoy exploring new FPS games, and learning about how
+              emerging technologies like AI are shaping the world around us.
             </p>
 
             <Button asChild>
@@ -144,11 +146,11 @@ export default async function LearnMore() {
 
         {/* Purpose */}
         <div className="grid [grid-template-columns:1fr_3fr] gap-y-32">
-          <h1 className="text-4xl font-bold font-serif whitespace-nowrap">
-            Our Purpose
+          <h1 className="text-2xl md:text-4xl font-bold font-serif whitespace-nowrap">
+            Purpose
           </h1>
 
-          <p className="text-6xl font-bold">
+          <p className="text-3xl md:text-6xl font-bold">
             We believe AI will have a vast impact on the world. Apollo is
             dedicated to building systems that people can rely on and generating
             research about the opportunities and risks of AI.
@@ -157,15 +159,15 @@ export default async function LearnMore() {
 
         <Separator />
 
-        {/* Gaol */}
+        {/* Goal */}
         <div className="grid [grid-template-columns:1fr_3fr] gap-y-32">
-          <h1 className="text-4xl font-bold font-serif whitespace-nowrap">
+          <h1 className="text-2xl md:text-4xl font-bold font-serif whitespace-nowrap">
             Goals
           </h1>
 
-          <p className="text-6xl font-bold">
-            Our goal is to continuously upadte Apollo to make the user
-            experience as streamlined as possile.
+          <p className="text-3xl md:text-6xl font-bold">
+            Our goal is to continuously update Apollo to make the user
+            experience as streamlined as possible.
           </p>
         </div>
 
@@ -396,6 +398,8 @@ export default async function LearnMore() {
             </tbody>
           </table>
         </div>
+
+        {/* Limitations/Bugs */}
       </div>
     </>
   );

@@ -198,7 +198,7 @@ export default function ChatInteractionSection({ chatId }: Props) {
   };
 
   return (
-    <div className="flex flex-col w-1/2 mx-auto min-h-screen gap-32 px-4 pt-4">
+    <div className="flex flex-col h-full gap-32">
       <div className="flex-1">
         <div className="prose max-w-full">
           {messages.map((message) => {

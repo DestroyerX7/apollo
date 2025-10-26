@@ -1,10 +1,11 @@
-import Sidebar from "@/components/Sidebar";
+import CustomSidebar from "@/components/CustomSidebar";
 import ChatInteractionSection from "@/components/ChatInteractionSection";
 import { getChat } from "@/lib/actions";
 import { auth } from "@/lib/auth";
 import { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
 type Props = {
   params: { chatId: string };
@@ -40,9 +41,16 @@ export default async function Chat({ params }: Props) {
   }
 
   return (
-    <div className="flex">
-      <Sidebar user={data.user} selectedChatId={chatId} />
-      <ChatInteractionSection chatId={chatId} />
-    </div>
+    <SidebarProvider>
+      <CustomSidebar user={data.user} selectedChatId={chatId} />
+
+      <div className="w-full px-4 pt-4 min-h-screen">
+        <SidebarTrigger className="cursor-pointer fixed" />
+
+        <div className="max-w-3xl mx-auto h-full">
+          <ChatInteractionSection chatId={chatId} />
+        </div>
+      </div>
+    </SidebarProvider>
   );
 }
