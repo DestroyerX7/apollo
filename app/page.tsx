@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import Image from "next/image";
@@ -12,20 +13,26 @@ export default async function Home() {
   });
 
   return (
-    <div>
+    <>
       <div className="sticky top-0 z-50">
         <Header isLoggedIn={data !== null} />
       </div>
 
-      <div className="my-16 space-y-32 mx-4 sm:mx-8 lg:mx-16 2xl:mx-32">
-        <div className="flex items-center flex-col sm:flex-row gap-8 sm:gap-0">
-          <div className="space-y-16">
+      {/* Main */}
+      <main className="space-y-16 m-8 md:m-16 xl:space-y-32 2xl:mx-32">
+        {/* Heading and Image */}
+        <div className="flex items-center flex-col gap-8 xl:flex-row xl:gap-0">
+          <div className="space-y-8">
             <div className="space-y-4">
-              <h1 className="text-4xl lg:text-6xl 2xl:text-8xl font-bold font-serif">
-                The future of AI is here
+              <h1 className="text-6xl sm:text-8xl font-bold font-serif">
+                The{" "}
+                <span className="bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent">
+                  future
+                </span>{" "}
+                of AI is here
               </h1>
 
-              <h2 className="text-2xl lg:text-3xl 2xl:text-4xl">
+              <h2 className="text-3xl sm:text-4xl">
                 Apollo is a modern chatbot website that allows users to ask
                 questions and get fast and reliable answers.
               </h2>
@@ -44,35 +51,34 @@ export default async function Home() {
             width={750}
             height={750}
             alt="AI chatbot best practices"
-            className="h-auto w-full sm:max-w-[300px] md:max-w-[400px] lg:max-w-[600px] object-contain xl:max-w-[700px] 2xl:max-w-[750px]"
+            className="h-auto w-full object-contain sm:max-w-3/4 md:max-w-2/3 lg:max-w-3/5 xl:max-w-[500px] 2xl:max-w-[750px]"
             priority
           />
         </div>
 
-        <div className="bg-accent rounded sm:rounded-2xl p-8 sm:p-16 gap-4">
+        {/* Version */}
+        <div className="bg-accent rounded-2xl p-8 sm:p-12 xl:p-16">
           <div className="lg:max-w-1/2 space-y-4">
             <h1 className="text-4xl font-bold">Apollo v1</h1>
 
             <h2 className="text-2xl">
               Introducing the best model we&apos;ve ever made, better at
-              reasoning, coding, math, and more.
+              reasoning, math, coding, and more.
             </h2>
 
-            <Button
-              className="cursor-pointer //px-8 //py-6 //text-lg //rounded-lg"
-              asChild
-            >
+            <Button className="cursor-pointer" asChild>
               <Link href="/learn-more">Learn more</Link>
             </Button>
           </div>
         </div>
 
-        <div className="px-4 pb-4 pt-8 sm:p-16 rounded bg-secondary sm:rounded-2xl">
-          <h1 className="mb-8 text-2xl font-bold">
-            Ask questions about any topic
-          </h1>
+        <Separator />
 
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+        {/* Chats */}
+        <>
+          <h1 className="mb-8 text-2xl font-bold">Ask about anything</h1>
+
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
             <Card>
               <CardContent>
                 <div className="space-y-4">
@@ -185,8 +191,8 @@ export default async function Home() {
               </CardContent>
             </Card>
           </div>
-        </div>
-      </div>
-    </div>
+        </>
+      </main>
+    </>
   );
 }

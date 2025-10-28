@@ -20,8 +20,8 @@ export default async function Login() {
   }
 
   return (
-    <div className="h-screen flex items-center justify-center">
-      <div className="w-1/4">
+    <div className="h-screen flex items-center justify-center p-4">
+      <div className="w-sm">
         <LoginCard />
       </div>
 

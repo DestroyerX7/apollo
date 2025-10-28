@@ -40,10 +40,10 @@ export default async function LearnMore() {
         <Header isLoggedIn={data !== null} />
       </div>
 
-      <div className="md:mx-32 my-16 space-y-32 p-4">
+      <main className="space-y-16 m-8 md:m-16 xl:space-y-32 2xl:mx-32">
         <div className="text-center space-y-8">
           <h1 className="text-6xl md:text-8xl font-bold font-serif">
-            Welcome to Apollo
+            Welcome to <span className="text-primary">Apollo</span>
           </h1>
 
           <p className="text-2xl md:text-4xl">
@@ -52,8 +52,8 @@ export default async function LearnMore() {
           </p>
         </div>
 
-        <div className="space-y-16">
-          <p className="text-4xl text-center">
+        <div className="space-y-8 md:space-y-16">
+          <p className="text-2xl md:text-4xl text-center">
             Here are some of its amazing capabilites
           </p>
 
@@ -145,12 +145,12 @@ export default async function LearnMore() {
         <Separator />
 
         {/* Purpose */}
-        <div className="grid [grid-template-columns:1fr_3fr] gap-y-32">
-          <h1 className="text-2xl md:text-4xl font-bold font-serif whitespace-nowrap">
+        <div className="grid grid-cols-1 gap-y-8 lg:grid-cols-[1fr_3fr] lg:gap-y-32">
+          <h2 className="text-3xl font-bold font-serif whitespace-nowrap lg:text-4xl 2xl:text-5xl">
             Purpose
-          </h1>
+          </h2>
 
-          <p className="text-3xl md:text-6xl font-bold">
+          <p className="text-4xl font-bold lg:text-5xl 2xl:text-6xl">
             We believe AI will have a vast impact on the world. Apollo is
             dedicated to building systems that people can rely on and generating
             research about the opportunities and risks of AI.
@@ -160,12 +160,12 @@ export default async function LearnMore() {
         <Separator />
 
         {/* Goal */}
-        <div className="grid [grid-template-columns:1fr_3fr] gap-y-32">
-          <h1 className="text-2xl md:text-4xl font-bold font-serif whitespace-nowrap">
-            Goals
-          </h1>
+        <div className="grid grid-cols-1 gap-y-8 lg:grid-cols-[1fr_3fr] lg:gap-y-32">
+          <h2 className="text-3xl font-bold font-serif whitespace-nowrap lg:text-4xl 2xl:text-5xl">
+            Goal
+          </h2>
 
-          <p className="text-3xl md:text-6xl font-bold">
+          <p className="text-4xl font-bold lg:text-5xl 2xl:text-6xl">
             Our goal is to continuously update Apollo to make the user
             experience as streamlined as possible.
           </p>
@@ -333,7 +333,7 @@ export default async function LearnMore() {
                     className="flex items-center gap-2 no-underline"
                     target="_blank"
                   >
-                    <FaReact className="text-rose-500 animate-spin [animation-duration:5s]" />
+                    <FaReact className="text-rose-500 animate-spin animation-duration-[5s]" />
                     <p>React Icons</p>
                   </Link>
                 </td>
@@ -400,7 +400,7 @@ export default async function LearnMore() {
         </div>
 
         {/* Limitations/Bugs */}
-      </div>
+      </main>
     </>
   );
 }

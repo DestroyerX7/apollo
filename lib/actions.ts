@@ -169,20 +169,20 @@ cloudinary.config({
 });
 
 type CloudinaryUploadResponse = {
-  public_id: string;
-  version: number;
-  signature: string;
-  width: number;
-  height: number;
-  format: string;
-  resource_type: string;
-  created_at: string;
-  tags: string[];
-  bytes: number;
-  type: string;
-  etag: string;
-  placeholder: boolean;
-  url: string;
+  // public_id: string;
+  // version: number;
+  // signature: string;
+  // width: number;
+  // height: number;
+  // format: string;
+  // resource_type: string;
+  // created_at: string;
+  // tags: string[];
+  // bytes: number;
+  // type: string;
+  // etag: string;
+  // placeholder: boolean;
+  // url: string;
   secure_url: string;
 };
 
@@ -218,7 +218,7 @@ export const uploadImage = async (
 
   const result = await streamUpload(buffer);
 
-  if (previousImageUrl) {
+  if (previousImageUrl && previousImageUrl.includes("apollo-uploads/")) {
     deleteImageByUrl(previousImageUrl);
   }
 
@@ -228,7 +228,7 @@ export const uploadImage = async (
 const deleteImageByUrl = async (url: string) => {
   const publicId = getPublicIdFromUrl(url);
 
-  await cloudinary.uploader.destroy(publicId, (error, result) => {
+  await cloudinary.uploader.destroy(publicId, (error /*, result*/) => {
     if (error) {
       throw error;
     }
@@ -243,4 +243,11 @@ const getPublicIdFromUrl = (url: string) => {
 
 export const deleteChat = async (chatId: string) => {
   await prisma.chat.delete({ where: { id: chatId } });
+};
+
+export const renameChat = async (name: string, chatId: string) => {
+  await prisma.chat.update({
+    where: { id: chatId },
+    data: { name },
+  });
 };
