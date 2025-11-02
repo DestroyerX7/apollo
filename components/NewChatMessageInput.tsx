@@ -10,6 +10,7 @@ import { ChatCompletionUserMessageParam } from "groq-sdk/resources/chat.mjs";
 import { useRouter } from "next/navigation";
 import MessageInput from "./MessageInput";
 import { FormEvent, useState } from "react";
+import { toast } from "sonner";
 
 type Props = {
   userId: string;
@@ -53,6 +54,12 @@ export default function NewChatMessageInput({ userId }: Props) {
       router.push(`chat/${chat.id}`);
     } catch (error) {
       console.log(error);
+
+      if (error instanceof Error) {
+        toast.error(error.message, { position: "top-center" });
+      } else {
+        toast.error("An error occured ☹️", { position: "top-center" });
+      }
     }
   };
 

@@ -46,14 +46,15 @@ export default async function Home() {
             </Button>
           </div>
 
-          <Image
-            src="/ai-chatbot-best-practices.jpg"
-            width={750}
-            height={750}
-            alt="AI chatbot best practices"
-            className="h-auto w-full object-contain sm:max-w-3/4 md:max-w-2/3 lg:max-w-3/5 xl:max-w-[500px] 2xl:max-w-[750px]"
-            priority
-          />
+          <div className="relative aspect-16/10 shrink-0 w-full sm:w-3/4 md:w-2/3 lg:w-3/5 xl:w-[500px] 2xl:w-[750px]">
+            <Image
+              src="/ai-chatbot-best-practices.jpg"
+              alt="AI chatbot best practices"
+              priority
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 768px) 75vw, (max-width: 1024px) 66.67vw, (max-width: 1280px) 60vw, (max-width: 1536px) 500px, 750px"
+            />
+          </div>
         </div>
 
         {/* Version */}

@@ -109,9 +109,7 @@ export default async function LearnMore() {
               fill
               priority
               className="object-cover"
-              sizes="(max-width: 640px) 100vw, 
-            (max-width: 1024px) 75vw, 
-            50vw"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 75vw, 50vw"
             />
           </div>
 
@@ -399,7 +397,42 @@ export default async function LearnMore() {
           </table>
         </div>
 
+        <Separator />
+
+        {/* In Progress */}
+        <div className="prose max-w-none">
+          <h1>In Progress 🪛</h1>
+
+          <ul>
+            <li>Making UI look better</li>
+            <li>Being able to rename chats</li>
+            <li>Temp chats that don&apos;t save messages</li>
+            <li>Better error handling and showing an error message</li>
+            <li>
+              Being able to chat as a guest so you don&apos;t have to login
+            </li>
+            <li>Being able to reset your password if you forget it</li>
+          </ul>
+        </div>
+
         {/* Limitations/Bugs */}
+        <div className="prose max-w-none">
+          <h1>Limitations 🤖</h1>
+
+          <ul>
+            <li>
+              Apollo responses stop when they get too long. This is to try an
+              prevent going above of Groq API rate limits
+            </li>
+            <li>
+              Apollo only remembers the last 10 messages. This is to try an
+              prevent going above of Groq API rate limits
+            </li>
+            <li>Apollo cannot search the internet</li>
+            <li>Cannot upload files or images</li>
+            <li>UI can look weird sometimes</li>
+          </ul>
+        </div>
       </main>
     </>
   );

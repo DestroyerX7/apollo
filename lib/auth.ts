@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { PrismaClient } from "@/generated/prisma";
+import { nextCookies } from "better-auth/next-js";
 
 export const prisma = new PrismaClient();
 export const auth = betterAuth({
@@ -20,4 +21,5 @@ export const auth = betterAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
     },
   },
+  plugins: [nextCookies()],
 });

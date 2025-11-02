@@ -6,6 +6,7 @@ import { headers } from "next/headers";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "New Chat - Apollo",
@@ -37,6 +38,8 @@ export default async function NewChat() {
 
           <NewChatMessageInput userId={data.user.id} />
         </div>
+
+        <Toaster />
       </div>
     </SidebarProvider>
   );

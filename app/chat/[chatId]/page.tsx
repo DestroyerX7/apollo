@@ -6,6 +6,7 @@ import { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/sonner";
 
 type Props = {
   params: { chatId: string };
@@ -50,6 +51,8 @@ export default async function Chat({ params }: Props) {
         <div className="max-w-3xl mx-auto h-full">
           <ChatInteractionSection chatId={chatId} />
         </div>
+
+        <Toaster />
       </div>
     </SidebarProvider>
   );

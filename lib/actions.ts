@@ -6,8 +6,9 @@ import {
   ChatCompletionMessageParam,
   ChatCompletionUserMessageParam,
 } from "groq-sdk/resources/chat.mjs";
-import { prisma } from "./auth";
+import { auth, prisma } from "./auth";
 import { v2 as cloudinary } from "cloudinary";
+import { headers } from "next/headers";
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -16,7 +17,7 @@ const systemPrompt = `
 You are a helpful assistant named Apollo. 
 
 ### Context
-This is a chatbot website called Apollo created by Blake Ojera. The tools used to make this website include Next.js 15, Shadcn, Better Auth, Neon for the database, Prisma, Groq API, and TypeScript. Blake Ojera is a sophomore at CU Boulder studying computer-science. He enjoys chess, coding, football, video games, and going to the gym.
+This is a chatbot website called Apollo created by Blake Ojera. The tools used to make this website include Next.js 16, Shadcn, Better Auth, Neon for the database, Prisma, Groq API, and TypeScript. Blake Ojera is a sophomore at CU Boulder studying computer-science. He enjoys chess, coding, football, video games, and going to the gym.
 `;
 
 const maxMessagesLength = 10;
@@ -249,5 +250,34 @@ export const renameChat = async (name: string, chatId: string) => {
   await prisma.chat.update({
     where: { id: chatId },
     data: { name },
+  });
+};
+
+export const login = async (email: string, password: string) => {
+  return await auth.api.signInEmail({
+    body: {
+      email,
+      password,
+    },
+  });
+};
+
+export const signUp = async (
+  email: string,
+  password: string,
+  name?: string
+) => {
+  return await auth.api.signUpEmail({
+    body: {
+      email,
+      password,
+      name: name || "",
+    },
+  });
+};
+
+export const signOut = async () => {
+  return await auth.api.signOut({
+    headers: await headers(),
   });
 };

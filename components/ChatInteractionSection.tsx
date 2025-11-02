@@ -26,6 +26,8 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 import { Spinner } from "./ui/spinner";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 // import { User } from "better-auth";
 // import MessageList from "./MessageList";
 
@@ -39,6 +41,7 @@ export default function ChatInteractionSection({ chatId }: Props) {
   const [messages, setMessages] = useState<ChatCompletionMessageParam[]>([]);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const loadMessages = async () => {
@@ -50,12 +53,23 @@ export default function ChatInteractionSection({ chatId }: Props) {
             return { content, role };
           });
 
+        if (chatCompletionMessageParams.length < 1) {
+          router.push("/new-chat");
+          return;
+        }
+
         setMessages(chatCompletionMessageParams);
 
         // Doesn't work
         // bottomRef.current?.scrollIntoView({ behavior: "smooth" });
       } catch (error) {
         console.log(error);
+
+        if (error instanceof Error) {
+          toast.error(error.message, { position: "top-center" });
+        } else {
+          toast.error("An error occured ☹️", { position: "top-center" });
+        }
       }
     };
 
@@ -107,6 +121,12 @@ export default function ChatInteractionSection({ chatId }: Props) {
       ]);
     } catch (error) {
       console.log(error);
+
+      if (error instanceof Error) {
+        toast.error(error.message, { position: "top-center" });
+      } else {
+        toast.error("An error occured ☹️", { position: "top-center" });
+      }
     }
   };
 
