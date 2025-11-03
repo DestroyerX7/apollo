@@ -174,7 +174,13 @@ export default function CustomSidebar({ user, selectedChatId }: Props) {
         <SidebarMenu>
           <SidebarMenuItem>
             <Link href="/" className="flex items-center gap-2 p-2">
-              <Image src="/apollo.png" alt="Apollo" width={32} height={32} />
+              <Image
+                src="/apollo.png"
+                alt="Apollo"
+                width={32}
+                height={32}
+                className="bg-transparent mix-blend-normal"
+              />
               <h1 className="font-bold text-2xl">Apollo</h1>
             </Link>
           </SidebarMenuItem>

@@ -39,7 +39,7 @@ export default async function Home() {
             </div>
 
             <Button
-              className="cursor-pointer px-8 py-6 text-lg font-bold rounded-full hover:-translate-y-1 transition-transform shadow-[0_0_25px_rgba(59,130,246,0.5)]"
+              className="cursor-pointer px-8 py-6 text-lg font-bold rounded-full hover:-translate-y-1 transition-transform drop-shadow-xl drop-shadow-primary/50"
               asChild
             >
               <Link href="/new-chat">Try Apollo</Link>
@@ -48,7 +48,7 @@ export default async function Home() {
 
           <div className="relative aspect-16/10 shrink-0 w-full sm:w-3/4 md:w-2/3 lg:w-3/5 xl:w-[500px] 2xl:w-[750px]">
             <Image
-              src="/ai-chatbot-best-practices.jpg"
+              src="/ai-chatbot-best-practices-bg-rm.png"
               alt="AI chatbot best practices"
               priority
               fill
@@ -159,7 +159,7 @@ export default async function Home() {
                     </p>
                   </div>
 
-                  <ol className="prose list-decimal list-inside">
+                  <ol className="prose list-decimal list-inside text-foreground marker:text-foreground">
                     <li>
                       Objects don&apos;t move on their own - you must apply a
                       force.

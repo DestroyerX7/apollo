@@ -11,7 +11,13 @@ export default function Header({ isLoggedIn }: Props) {
   return (
     <header className="flex justify-between items-center p-4 border-b bg-primary-foreground z-50">
       <Link href="/" className="flex items-center gap-2">
-        <Image src="/apollo.png" width={32} height={32} alt="Apollo" />
+        <Image
+          src="/apollo.png"
+          width={32}
+          height={32}
+          alt="Apollo"
+          className="bg-transparent mix-blend-normal"
+        />
         <h1 className="text-2xl font-bold hidden sm:block ">Apollo</h1>
       </Link>
 
@@ -26,6 +32,8 @@ export default function Header({ isLoggedIn }: Props) {
               <Link href="/new-chat">Chat</Link>
             </Button>
 
+            {/* The background color flickers to white the first time you hover over the button on dark mode */}
+            {/* This is a problem with the shadcn button not the logout button */}
             <Button className="cursor-pointer" variant="outline" asChild>
               <LogOutButton>Log Out</LogOutButton>
             </Button>

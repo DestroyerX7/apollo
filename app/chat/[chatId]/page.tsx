@@ -46,7 +46,7 @@ export default async function Chat({ params }: Props) {
       <CustomSidebar user={data.user} selectedChatId={chatId} />
 
       <div className="w-full px-4 pt-4 min-h-screen">
-        <SidebarTrigger className="cursor-pointer fixed" />
+        <SidebarTrigger className="cursor-pointer fixed bg-primary-foreground" />
 
         <div className="max-w-3xl mx-auto h-full">
           <ChatInteractionSection chatId={chatId} />

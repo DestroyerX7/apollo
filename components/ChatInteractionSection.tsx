@@ -130,27 +130,6 @@ export default function ChatInteractionSection({ chatId }: Props) {
     }
   };
 
-  // const setMessagesWithoutStream = async (
-  //   userMessage: ChatCompletionUserMessageParam
-  // ) => {
-  //   try {
-  //     const chatCompletion = await getGroqChatCompletion([
-  //       ...messages,
-  //       userMessage,
-  //     ]);
-
-  //     setMessages((prev) => [...prev, chatCompletion.choices[0].message]);
-
-  //     await saveUserAndAssistantMessages(
-  //       userMessage,
-  //       chatCompletion.choices[0].message,
-  //       chatId
-  //     );
-  //   } catch (erorr) {
-  //     console.log(erorr);
-  //   }
-  // };
-
   const setMessagesWithStream = async (
     stream: Stream<ChatCompletionChunk>,
     userMessage: ChatCompletionUserMessageParam

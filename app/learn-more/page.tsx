@@ -172,7 +172,7 @@ export default async function LearnMore() {
         <Separator />
 
         {/* Tools used */}
-        <div className="prose max-w-none">
+        <div className="prose max-w-none text-foreground">
           <h1>Tools used</h1>
 
           <table>
@@ -400,7 +400,7 @@ export default async function LearnMore() {
         <Separator />
 
         {/* In Progress */}
-        <div className="prose max-w-none">
+        <div className="prose max-w-none text-foreground">
           <h1>In Progress 🪛</h1>
 
           <ul>
@@ -416,7 +416,7 @@ export default async function LearnMore() {
         </div>
 
         {/* Limitations/Bugs */}
-        <div className="prose max-w-none">
+        <div className="prose max-w-none text-foreground">
           <h1>Limitations 🤖</h1>
 
           <ul>

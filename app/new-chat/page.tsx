@@ -27,11 +27,17 @@ export default async function NewChat() {
       <CustomSidebar user={data.user} />
 
       <div className="w-full p-4">
-        <SidebarTrigger className="fixed cursor-pointer" />
+        <SidebarTrigger className="fixed cursor-pointer bg-primary-foreground" />
 
         <div className="h-full flex flex-col justify-center max-w-3xl mx-auto gap-8">
           <div className="flex items-center justify-center gap-4">
-            <Image src="/apollo.png" alt="Apollo" width={32} height={32} />
+            <Image
+              src="/apollo.png"
+              alt="Apollo"
+              width={32}
+              height={32}
+              className="bg-transparent mix-blend-normal"
+            />
 
             <h1 className="font-bold text-2xl">How can I help you?</h1>
           </div>
