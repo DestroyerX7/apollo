@@ -4,13 +4,14 @@ import { Chat } from "@/generated/prisma";
 import {
   deleteChat,
   getChats,
+  renameChat,
   updateImage,
   updateName,
   uploadImage,
 } from "@/lib/actions";
 import Image from "next/image";
 import Link from "next/link";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import {
   IoAddCircle,
   IoSettingsOutline,
@@ -66,18 +67,12 @@ import {
 } from "lucide-react";
 import { MdLogout } from "react-icons/md";
 import { authClient } from "@/lib/auth-client";
-// import z from "zod";
-// import { useForm } from "react-hook-form";
-// import { zodResolver } from "@hookform/resolvers/zod";
+import { GoPencil } from "react-icons/go";
 
 type Props = {
   user: User;
   selectedChatId?: string;
 };
-
-// const editProfileFormSchema = z.object({
-//   name: z.string().min(1),
-// });
 
 const baseUrl =
   process.env.NODE_ENV === "production"
@@ -86,7 +81,9 @@ const baseUrl =
 
 export default function CustomSidebar({ user, selectedChatId }: Props) {
   const [chats, setChats] = useState<Chat[]>([]);
-  // const [profileData, setProfileData] = useState({ name: user.name });
+  const [editingChatId, setEditingChatId] = useState<string | null>(null);
+  const [editingChatName, setEditingChatName] = useState("");
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -102,16 +99,12 @@ export default function CustomSidebar({ user, selectedChatId }: Props) {
     loadChats();
   }, [user]);
 
-  // const form = useForm<z.infer<typeof editProfileFormSchema>>({
-  //   resolver: zodResolver(editProfileFormSchema),
-  //   defaultValues: {
-  //     name: user.name,
-  //   },
-  // });
-
-  // const editProfile = async (values: z.infer<typeof editProfileFormSchema>) => {
-  //   console.log(values);
-  // };
+  useEffect(() => {
+    if (editingChatId && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [editingChatId]);
 
   const handleSubmit = async (e: FormEvent) => {
     try {
@@ -168,6 +161,30 @@ export default function CustomSidebar({ user, selectedChatId }: Props) {
     }
   };
 
+  const handleRename = async (chatId: string) => {
+    try {
+      await renameChat(editingChatName.trim(), chatId);
+
+      setChats(
+        chats.map((chat) =>
+          chat.id === editingChatId
+            ? { ...chat, name: editingChatName.trim() }
+            : chat
+        )
+      );
+
+      setEditingChatId(null);
+      setEditingChatName("");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const cancelRename = () => {
+    setEditingChatId(null);
+    setEditingChatName("");
+  };
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -209,49 +226,83 @@ export default function CustomSidebar({ user, selectedChatId }: Props) {
                 <SidebarMenuItem key={chat.id}>
                   <SidebarMenuButton
                     className={selectedChatId === chat.id ? "bg-accent" : ""}
-                    asChild
+                    asChild={editingChatId !== chat.id}
                   >
-                    <Link href={`/chat/${chat.id}`}>
-                      <span>{chat.name}</span>
-                    </Link>
+                    {editingChatId === chat.id ? (
+                      <input
+                        ref={inputRef}
+                        value={editingChatName}
+                        onChange={(e) => setEditingChatName(e.target.value)}
+                        onBlur={() => handleRename(chat.id)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            handleRename(chat.id);
+                          } else if (e.key === "Escape") {
+                            cancelRename();
+                          }
+                        }}
+                      />
+                    ) : (
+                      <Link href={`/chat/${chat.id}`}>
+                        <span>{chat.name}</span>
+                      </Link>
+                    )}
                   </SidebarMenuButton>
 
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <SidebarMenuAction className="cursor-pointer" showOnHover>
-                        <MoreHorizontal />
-                        <span className="sr-only">More</span>
-                      </SidebarMenuAction>
-                    </DropdownMenuTrigger>
-
-                    <DropdownMenuContent className="w-32">
-                      <DropdownMenuItem
-                        className="cursor-pointer"
-                        onClick={() => copyLink(baseUrl + `/chat/${chat.id}`)}
-                      >
-                        <LinkIcon className="text-muted-foreground" />
-                        <span>Copy Link</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild className="cursor-pointer">
-                        <Link
-                          href={baseUrl + `/chat/${chat.id}`}
-                          target="_blank"
+                  {editingChatId !== chat.id && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <SidebarMenuAction
+                          className="cursor-pointer"
+                          showOnHover
                         >
-                          <ArrowUpRight className="text-muted-foreground" />
-                          <span>New Tab</span>
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        variant="destructive"
-                        className="cursor-pointer"
-                        onClick={() => deleteChatClient(chat.id)}
-                      >
-                        <Trash2 className="text-muted-foreground" />
-                        <span>Delete</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                          <MoreHorizontal />
+                          <span className="sr-only">More</span>
+                        </SidebarMenuAction>
+                      </DropdownMenuTrigger>
+
+                      <DropdownMenuContent className="w-32">
+                        <DropdownMenuItem
+                          className="cursor-pointer"
+                          onClick={() => {
+                            setEditingChatId(chat.id);
+                            setEditingChatName(chat.name);
+                          }}
+                        >
+                          <GoPencil className="text-muted-foreground" />
+                          <span>Rename</span>
+                        </DropdownMenuItem>
+
+                        <DropdownMenuSeparator />
+
+                        <DropdownMenuItem
+                          className="cursor-pointer"
+                          onClick={() => copyLink(baseUrl + `/chat/${chat.id}`)}
+                        >
+                          <LinkIcon className="text-muted-foreground" />
+                          <span>Copy Link</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild className="cursor-pointer">
+                          <Link
+                            href={baseUrl + `/chat/${chat.id}`}
+                            target="_blank"
+                          >
+                            <ArrowUpRight className="text-muted-foreground" />
+                            <span>New Tab</span>
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          variant="destructive"
+                          className="cursor-pointer"
+                          onClick={() => deleteChatClient(chat.id)}
+                        >
+                          <Trash2 className="text-muted-foreground" />
+                          <span>Delete</span>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>

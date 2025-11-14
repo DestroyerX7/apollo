@@ -25,6 +25,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   chats         Chat[]
+  role          UserRole  @default(user)
 
   @@unique([email])
   @@map("user")
@@ -104,4 +105,9 @@ enum ChatCompletionRole {
   system
   user
   assistant
+}
+
+enum UserRole {
+  user
+  dev
 }

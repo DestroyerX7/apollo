@@ -79,7 +79,7 @@ export default async function LearnMore() {
                 </CardTitle>
 
                 <CardDescription>
-                  Ask Apollo questions about any topic
+                  Get fast responses so you never have to wait for answers
                 </CardDescription>
               </CardHeader>
             </Card>
