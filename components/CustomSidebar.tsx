@@ -68,6 +68,7 @@ import {
 import { MdLogout } from "react-icons/md";
 import { authClient } from "@/lib/auth-client";
 import { GoPencil } from "react-icons/go";
+import { toast } from "sonner";
 
 type Props = {
   user: User;
@@ -163,7 +164,12 @@ export default function CustomSidebar({ user, selectedChatId }: Props) {
 
   const handleRename = async (chatId: string) => {
     try {
+      toast.loading("Renaming...", { position: "top-center" });
+
       await renameChat(editingChatName.trim(), chatId);
+
+      toast.dismiss();
+      toast.success("Renamed", { position: "top-center" });
 
       setChats(
         chats.map((chat) =>
@@ -176,6 +182,8 @@ export default function CustomSidebar({ user, selectedChatId }: Props) {
       setEditingChatId(null);
       setEditingChatName("");
     } catch (error) {
+      toast.dismiss();
+      toast.error("Failed to rename", { position: "top-center" });
       console.log(error);
     }
   };
@@ -339,6 +347,7 @@ export default function CustomSidebar({ user, selectedChatId }: Props) {
                   side="top"
                   className="w-(--radix-dropdown-menu-trigger-width)"
                 >
+                  <DropdownMenuLabel>User</DropdownMenuLabel>
                   <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
 
                   <DropdownMenuSeparator />
