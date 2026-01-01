@@ -55,7 +55,7 @@ export default function SignUpCard() {
       await authClient.signUp.email({
         email,
         password,
-        name: "",
+        name: "User",
         fetchOptions: {
           onRequest: () => {
             toast.dismiss();

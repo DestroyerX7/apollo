@@ -336,7 +336,7 @@ export default function CustomSidebar({ user, selectedChatId }: Props) {
                         </AvatarFallback>
                       </Avatar>
 
-                      <p className="text-sm">{user.name || "User"}</p>
+                      <p className="text-sm">{user.name}</p>
                     </div>
 
                     <IoEllipsisHorizontalSharp className="ml-auto" />
@@ -347,7 +347,7 @@ export default function CustomSidebar({ user, selectedChatId }: Props) {
                   side="top"
                   className="w-(--radix-dropdown-menu-trigger-width)"
                 >
-                  <DropdownMenuLabel>User</DropdownMenuLabel>
+                  <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
                   <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
 
                   <DropdownMenuSeparator />

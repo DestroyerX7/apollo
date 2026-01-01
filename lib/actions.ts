@@ -262,16 +262,12 @@ export const login = async (email: string, password: string) => {
   });
 };
 
-export const signUp = async (
-  email: string,
-  password: string,
-  name?: string
-) => {
+export const signUp = async (email: string, password: string, name: string) => {
   return await auth.api.signUpEmail({
     body: {
       email,
       password,
-      name: name || "",
+      name,
     },
   });
 };

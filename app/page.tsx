@@ -77,7 +77,7 @@ export default async function Home() {
 
         {/* Chats */}
         <>
-          <h1 className="mb-8 text-2xl font-bold">Ask about anything</h1>
+          <h1 className="mb-8 text-2xl font-bold">Ask anything</h1>
 
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
             <Card>

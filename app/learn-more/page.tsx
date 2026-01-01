@@ -411,7 +411,9 @@ export default async function LearnMore() {
             <li>
               Being able to chat as a guest so you don&apos;t have to login
             </li>
+            <li>Being able to verify your email</li>
             <li>Being able to reset your password if you forget it</li>
+            <li>Being able to delete your account</li>
           </ul>
         </div>
 
