@@ -1,6 +1,6 @@
 # Apollo
 
-Apollo is a modern chatbot website that is currently a work in progress.
+Apollo is a modern chatbot website that allows you to ask any question and get fast reliable answers.
 It uses Next.js 15 with Shadcn UI, authenticates users via **Better Auth**, stores data in **Neon** (PostgreSQL) accessed through **Prisma**, and powers the chat experience with the **Groq API**. The entire codebase is written in **TypeScript**.
 
 ---
@@ -52,8 +52,6 @@ Create a `.env` file at the root.
 | `BETTER_AUTH_SECRET` | Secret for Better Auth                        |
 | `GROQ_API_KEY`       | API key for Groq inference                    |
 | `BETTER_AUTH_URL`    | Your site URL (e.g., `http://localhost:3000`) |
-
-> **Tip:** Keep `.env` out of version control. Add it to `.gitignore`.
 
 ---
 
