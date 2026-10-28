@@ -1,7 +1,7 @@
 # Apollo
 
 Apollo is a modern chatbot website that allows you to ask any question and get fast reliable answers.
-It uses Next.js 15 with Shadcn UI, authenticates users via **Better Auth**, stores data in **Neon** (PostgreSQL) accessed through **Prisma**, and powers the chat experience with the **Groq API**. The entire codebase is written in **TypeScript**.
+It uses Next.js with Shadcn UI, authenticates users via **Better Auth**, stores data in **Neon** (PostgreSQL) accessed through **Prisma**, and powers the chat experience with the **Groq API**. The entire codebase is written in **TypeScript**.
 
 ---
 
